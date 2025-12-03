@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login 🐾 PetCare Clínica Veterinária</title>
+    <link rel="stylesheet" href="auth.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐾</text></svg>">
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+    <div class="card">
+        <div class="logo" onclick="animateLogo()">🐕‍🦺</div>
+        <h2>Bem-vindo de Volta! 🏥</h2>
+        <p style="color: #636e72; margin-bottom: 20px;">Faça login para acessar sua clínica</p>
+
+        <form id="loginForm" onsubmit="return false;">
+            <input 
+                id="email" 
+                type="email" 
+                placeholder="📧 Seu e-mail"
+                autocomplete="email"
+                required
+            >
+            <input 
+                id="password" 
+                type="password" 
+                placeholder="🔐 Sua senha"
+                autocomplete="current-password"
+                required
+            >
+
+            <button id="loginBtn" type="button">
+                <span id="loginBtnText">🚪 Entrar no Sistema</span>
+            </button>
+        </form>
+
+        <p>🔑 Esqueceu sua senha? <a href="#" onclick="showResetInfo()">Recuperar</a></p>
+        <p>🆕 Novo por aqui? <a href="cadastro.html">Criar conta gratuita</a></p>
+
+        <div id="msg"></div>
+    </div>
+
+    <script src="auth.js"></script>
+    <script>
+        // 🎨 Animação extra do logo
+        function animateLogo() {
+            const logo = document.querySelector('.logo');
+            logo.style.animation = 'none';
+            setTimeout(() => {
+                logo.style.animation = 'bounce 2s infinite, spin 0.5s ease';
+            }, 10);
+        }
+
+        // 🔑 Info de recuperação de senha
+        function showResetInfo() {
+            const msg = document.getElementById('msg');
+            msg.innerHTML = '📧 Para recuperar sua senha, entre em contato com o administrador da clínica!';
+            msg.style.color = '#00b894';
+            msg.style.background = 'rgba(0, 184, 148, 0.1)';
+            msg.style.border = '1px solid #00b894';
+            setTimeout(() => {
+                msg.innerHTML = '';
+                msg.style.background = '';
+                msg.style.border = '';
+            }, 5000);
+        }
+
+        // 🎯 Animação de entrada dos inputs
+        document.addEventListener('DOMContentLoaded', function() {
+            const inputs = document.querySelectorAll('input');
+            inputs.forEach((input, index) => {
+                input.style.opacity = '0';
+                input.style.transform = 'translateX(-20px)';
+                setTimeout(() => {
+                    input.style.transition = 'all 0.5s ease';
+                    input.style.opacity = '1';
+                    input.style.transform = 'translateX(0)';
+                }, 200 * (index + 1));
+            });
+        });
+
+        // 🐵 Easter egg: apertar Enter no último input
+        document.getElementById('password').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                document.getElementById('loginBtn').click();
+            }
+        });
+    </script>
+</body>
+</html>

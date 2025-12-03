@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro 🐾 PetCare Clínica Veterinária</title>
+    <link rel="stylesheet" href="auth.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐾</text></svg>">
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+    <div class="card">
+        <div class="logo" onclick="animateLogo()">🐾</div>
+        <h2>Criar Nova Conta 🏥</h2>
+        <p style="color: #636e72; margin-bottom: 20px;">Junte-se à nossa família de cuidados veterinários!</p>
+
+        <form id="cadastroForm" onsubmit="return false;">
+            <input 
+                id="nome" 
+                type="text" 
+                placeholder="👤 Seu nome completo"
+                autocomplete="name"
+                required
+                onfocus="showPetTip(this, 'Diga-nos como podemos chamar você!')"
+            >
+            <input 
+                id="email" 
+                type="email" 
+                placeholder="📧 Seu melhor e-mail"
+                autocomplete="email"
+                required
+                onfocus="showPetTip(this, 'Vamos usar isso para entrar em contato!')"
+            >
+            <input 
+                id="password" 
+                type="password" 
+                placeholder="🔐 Crie uma senha forte"
+                autocomplete="new-password"
+                required
+                minlength="6"
+                onfocus="showPetTip(this, 'Mínimo 6 caracteres para proteger seus pets!')"
+                oninput="checkPasswordStrength(this.value)"
+            >
+            
+            <!-- Indicador de força da senha -->
+            <div id="passwordStrength" style="display: none; margin: -10px 0 10px; height: 5px; background: #e0e0e0; border-radius: 5px; overflow: hidden;">
+                <div id="strengthBar" style="height: 100%; transition: all 0.3s ease; width: 0%;"></div>
+            </div>
+            <div id="strengthText" style="font-size: 12px; margin-top: 5px; min-height: 15px;"></div>
+
+            <button id="cadBtn" type="button">
+                <span id="cadBtnText">🎉 Criar Minha Conta</span>
+            </button>
+        </form>
+
+        <p>📝 Ao criar uma conta, você aceita nossos <a href="#" onclick="showTerms()">termos de serviço</a></p>
+        <p>🏠 Já tem conta? <a href="login.html">Fazer login agora</a></p>
+
+        
+        <div id="petTip" style="display: none; background: rgba(253, 203, 110, 0.2); border-left: 4px solid #fdcb6e; padding: 10px; margin: 10px 0; border-radius: 5px; font-size: 14px; color: #2d3436;"></div>
+
+        <div id="msg"></div>
+    </div>
+
+    <script src="auth.js"></script>
+    <script>
+        
+        function animateLogo() {
+            const logo = document.querySelector('.logo');
+            logo.style.animation = 'none';
+            setTimeout(() => {
+                logo.style.animation = 'bounce 2s infinite, spin 0.5s ease';
+            }, 10);
+        }
+
+        
+        function showPetTip(input, message) {
+            const tip = document.getElementById('petTip');
+            tip.innerHTML = `💡 ${message}`;
+            tip.style.display = 'block';
+            tip.style.animation = 'slideIn 0.3s ease';
+        }
+
+        
+        function checkPasswordStrength(password) {
+            const strengthBar = document.getElementById('strengthBar');
+            const strengthText = document.getElementById('strengthText');
+            const strengthContainer = document.getElementById('passwordStrength');
+            
+            strengthContainer.style.display = 'block';
+            
+            let strength = 0;
+            
+            // Verificar critérios
+            if (password.length >= 6) strength++;
+            if (password.length >= 10) strength++;
+            if (/[a-z]/.test(password)) strength++;
+            if (/[A-Z]/.test(password)) strength++;
+            if (/[0-9]/.test(password)) strength++;
+            if (/[^a-zA-Z0-9]/.test(password)) strength++;
+            
+            // Atualizar barra
+            const strengthPercent = (strength / 6) * 100;
+            strengthBar.style.width = strengthPercent + '%';
+            
+            // Cores e textos baseados na força
+            const strengthLevels = [
+                { color: '#ff7675', text: '🔴 Fraca - tente adicionar mais caracteres!' },
+                { color: '#fdcb6e', text: '🟡 Média - está melhorando!' },
+                { color: '#00b894', text: '🟢 Boa - ótimo trabalho!' },
+                { color: '#00cec9', text: '🔵 Excelente - senha super segura!' }
+            ];
+            
+            const level = Math.min(Math.floor(strengthPercent / 25), 3);
+            strengthBar.style.background = strengthLevels[level].color;
+            strengthText.innerHTML = strengthLevels[level].text;
+            strengthText.style.color = strengthLevels[level].color;
+        }
+
+        // 📋 Mostrar termos
+        function showTerms() {
+            const msg = document.getElementById('msg');
+            msg.innerHTML = `
+                <div style="text-align: left; max-height: 200px; overflow-y: auto;">
+                    <h4>📋 Termos de Serviço PetCare</h4>
+                    <p>🐾 Ao usar nossa plataforma, você concorda em:</p>
+                    <ul style="margin: 10px 0;">
+                        <li>🏥 Fornecer informações verdadeiras</li>
+                        <li>💙 Cuidar bem dos animais</li>
+                        <li>🔐 Manter sua senha segura</li>
+                        <li>📅 Manter dados atualizados</li>
+                    </ul>
+                    <p style="margin-top: 10px;">❤️ Obrigado por confiar na PetCare!</p>
+                </div>
+            `;
+            msg.style.color = '#2d3436';
+            msg.style.background = 'white';
+            msg.style.border = '2px solid #fdcb6e';
+            
+            setTimeout(() => {
+                msg.innerHTML = '';
+                msg.style.background = '';
+                msg.style.border = '';
+            }, 8000);
+        }
+
+        // 🎯 Animação de entrada
+        document.addEventListener('DOMContentLoaded', function() {
+            const inputs = document.querySelectorAll('input');
+            inputs.forEach((input, index) => {
+                input.style.opacity = '0';
+                input.style.transform = 'translateX(-20px)';
+                setTimeout(() => {
+                    input.style.transition = 'all 0.5s ease';
+                    input.style.opacity = '1';
+                    input.style.transform = 'translateX(0)';
+                }, 200 * (index + 1));
+            });
+        });
+
+        // 🐵 Easter egg: sequência de emojis
+        let emojiSequence = [];
+        document.addEventListener('keypress', function(e) {
+            emojiSequence.push(e.key);
+            if (emojiSequence.length > 5) emojiSequence.shift();
+            
+            if (emojiSequence.join('') === 'pet123') {
+                document.querySelector('.logo').textContent = '🦄';
+                document.querySelector('h2').textContent = '🦄 Modo Mágico Ativado! 🦄';
+                setTimeout(() => {
+                    document.querySelector('.logo').textContent = '🐾';
+                    document.querySelector('h2').textContent = 'Criar Nova Conta 🏥';
+                }, 3000);
+            }
+        });
+
+        // Limpar dica quando o input perde foco
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('blur', () => {
+                setTimeout(() => {
+                    document.getElementById('petTip').style.display = 'none';
+                }, 200);
+            });
+        });
+    </script>
+</body>
+</html>

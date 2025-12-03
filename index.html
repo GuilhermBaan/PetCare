@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PetCare - Clínica Veterinária</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            text-align: center;
+            background: white;
+            padding: 60px 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            max-width: 500px;
+            width: 90%;
+        }
+
+        .logo {
+            font-size: 80px;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 40px;
+            font-size: 1.2em;
+        }
+
+        .buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-secondary {
+            background: #f8f9fa;
+            color: #333;
+            border: 2px solid #e9ecef;
+        }
+
+        .btn-secondary:hover {
+            background: #e9ecef;
+            transform: translateY(-2px);
+        }
+
+        .loading {
+            display: none;
+            margin-top: 20px;
+            color: #666;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">🐾</div>
+        <h1>PetCare</h1>
+        <p class="subtitle">Clínica Veterinária</p>
+        
+        <div class="buttons">
+            <button onclick="redirectToSystem()" class="btn btn-primary">
+                Entrar no Sistema
+            </button>
+            <a href="auth/login.html" class="btn btn-secondary">
+                Fazer Login
+            </a>
+            <a href="auth/cadastro.html" class="btn btn-secondary">
+                Criar Conta
+            </a>
+        </div>
+        
+        <div id="loading" class="loading">
+            <div class="spinner"></div>
+            Verificando autenticação...
+        </div>
+    </div>
+
+    <script>
+        // Verificar se já está logado
+        window.addEventListener('load', () => {
+            const token = localStorage.getItem("token");
+            if (token) {
+                // Se tem token, mostrar loading e redirecionar para o sistema
+                document.getElementById('loading').style.display = 'block';
+                setTimeout(() => {
+                    window.location.href = "frontend/index.html";
+                }, 1000);
+            }
+        });
+
+        function redirectToSystem() {
+            const token = localStorage.getItem("token");
+            if (token) {
+                window.location.href = "frontend/index.html";
+            } else {
+                window.location.href = "auth/login.html";
+            }
+        }
+    </script>
+</body>
+</html>

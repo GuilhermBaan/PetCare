@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR">
+<head>
+  
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Sistema moderno de gestão para clínica veterinária">
+  <meta name="author" content="SuperNinja AI">
+  
+  
+  <title>🐾 Clínica Veterinária PetCare - Sistema de Gestão</title>
+  
+  
+  <link rel="stylesheet" href="./styles.css">
+  
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+  
+  <div class="app-container">
+    
+    
+    <header class="header">
+      <div class="header-content">
+       
+        <div class="logo-section">
+          <div class="logo">
+            <i class="fas fa-paw"></i>
+          </div>
+          <div class="title-section">
+            <h1 class="main-title">PetCare</h1>
+            <p class="subtitle">Clínica Veterinária</p>
+          </div>
+        </div>
+        
+        <!-- Informações do sistema -->
+        <div class="system-info">
+          <span class="badge">
+            <i class="fas fa-user"></i>
+            <span id="user-name">Carregando...</span>
+          </span>
+          <span class="badge">
+            <i class="fas fa-paint-brush"></i>
+            Editar
+          </span>
+          <button class="logout-btn" onclick="logout()">
+            <i class="fas fa-sign-out-alt"></i>
+            Sair
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Barra de navegação por abas -->
+    <nav class="navigation">
+      <div class="nav-tabs">
+        <!-- Botões de navegação entre seções -->
+        <button data-tab="donos" class="nav-tab active" onclick="switchTab('donos')">
+          <i class="fas fa-users"></i>
+          <span>Donos</span>
+        </button>
+        <button data-tab="animais" class="nav-tab" onclick="switchTab('animais')">
+          <i class="fas fa-dog"></i>
+          <span>Animais</span>
+        </button>
+        <button data-tab="vacinas" class="nav-tab" onclick="switchTab('vacinas')">
+          <i class="fas fa-syringe"></i>
+          <span>Vacinas</span>
+        </button>
+        <button data-tab="consultas" class="nav-tab" onclick="switchTab('consultas')">
+          <i class="fas fa-calendar-check"></i>
+          <span>Consultas</span>
+        </button>
+        <button data-tab="banho-tosa" class="nav-tab" onclick="switchTab('banho-tosa')">
+          <i class="fas fa-shower"></i>
+          <span>Banho e Tosa</span>
+        </button>
+      </div>
+      
+      <!-- Indicador visual de aba ativa -->
+      <div class="tab-indicator"></div>
+    </nav>
+
+    <!-- Conteúdo principal da aplicação -->
+    <main class="main-content">
+      
+      <!-- SEÇÃO DE DONOS -->
+      <section id="donos" class="tab-section active">
+        <div class="section-header">
+          <h2 class="section-title">
+            <i class="fas fa-users"></i>
+            Gestão de Donos
+          </h2>
+          <p class="section-description">Cadastre e gerencie os proprietários dos pets</p>
+        </div>
+
+        <!-- Formulário de cadastro/edição de donos -->
+        <div class="form-container">
+          <form id="form-dono" class="modern-form">
+            <!-- Campo oculto para ID (edição) -->
+            <input type="hidden" id="dono-id">
+            
+            <div class="form-grid">
+              <!-- Campo Nome do Dono -->
+              <div class="form-group">
+                <label for="dono-nome" class="form-label">
+                  <i class="fas fa-user"></i>
+                  Nome do Dono
+                </label>
+                <input 
+                  type="text" 
+                  id="dono-nome" 
+                  class="form-input" 
+                  placeholder="Digite o nome completo"
+                  required
+                >
+                <span class="input-helper">Nome completo do proprietário</span>
+              </div>
+
+              <!-- Campo Telefone -->
+              <div class="form-group">
+                <label for="dono-telefone" class="form-label">
+                  <i class="fas fa-phone"></i>
+                  Telefone
+                </label>
+                <input 
+                  type="tel" 
+                  id="dono-telefone" 
+                  class="form-input" 
+                  placeholder="(00) 00000-0000"
+                  pattern="\([0-9]{2}\) [0-9]{4,5}-[0-9]{4}"
+                  required
+                >
+                <span class="input-helper">Telefone para contato</span>
+              </div>
+            </div>
+
+            <!-- Botões de ação do formulário -->
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save"></i>
+                Salvar Dono
+              </button>
+              <button type="button" id="limpar-dono" class="btn btn-secondary">
+                <i class="fas fa-eraser"></i>
+                Limpar
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Tabela de listagem de donos -->
+        <div class="table-container">
+          <div class="table-header">
+            <h3 class="table-title">
+              <i class="fas fa-list"></i>
+              Donos Cadastrados
+            </h3>
+            <div class="table-info">
+              <span class="record-count" id="donos-count">0 registros</span>
+            </div>
+          </div>
+          
+          <div class="table-wrapper">
+            <table id="tabela-donos" class="modern-table">
+              <thead>
+                <tr>
+                  <th><i class="fas fa-hashtag"></i> ID</th>
+                  <th><i class="fas fa-user"></i> Nome</th>
+                  <th><i class="fas fa-phone"></i> Telefone</th>
+                  <th><i class="fas fa-dog"></i> Animais</th>
+                  <th><i class="fas fa-cogs"></i> Ações</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Linhas serão inseridas dinamicamente via JavaScript -->
+              </tbody>
+            </table>
+            
+            <!-- Mensagem quando não há dados -->
+            <div class="empty-state" id="donos-empty" style="display: none;">
+              <i class="fas fa-user-slash"></i>
+              <p>Nenhum dono cadastrado ainda</p>
+              <span>Comece cadastrando um novo proprietário</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SEÇÃO DE ANIMAIS -->
+      <section id="animais" class="tab-section">
+        <div class="section-header">
+          <h2 class="section-title">
+            <i class="fas fa-dog"></i>
+            Gestão de Animais
+          </h2>
+          <p class="section-description">Cadastre e gerencie os pacientes pets</p>
+        </div>
+
+        <!-- Formulário de cadastro/edição de animais -->
+        <div class="form-container">
+          <form id="form-animal" class="modern-form">
+            <input type="hidden" id="animal-id">
+            
+            <div class="form-grid">
+              <!-- Campo Nome do Animal -->
+              <div class="form-group">
+                <label for="animal-nome" class="form-label">
+                  <i class="fas fa-paw"></i>
+                  Nome do Animal
+                </label>
+                <input 
+                  type="text" 
+                  id="animal-nome" 
+                  class="form-input" 
+                  placeholder="Nome do pet"
+                  required
+                >
+                <span class="input-helper">Nome do animal de estimação</span>
+              </div>
+
+              <!-- Campo Espécie -->
+              <div class="form-group">
+                <label for="animal-especie" class="form-label">
+                  <i class="fas fa-dna"></i>
+                  Espécie
+                </label>
+                <select id="animal-especie" class="form-input" required>
+                  <option value="">Selecione a espécie</option>
+                  <option value="Cão">🐕 Cão</option>
+                  <option value="Gato">🐈 Gato</option>
+                  <option value="Pássaro">🦜 Pássaro</option>
+                  <option value="Peixe">🐠 Peixe</option>
+                  <option value="Hamster">🐹 Hamster</option>
+                  <option value="Coelho">🐰 Coelho</option>
+                  <option value="Outro">➕ Outro</option>
+                </select>
+                <span class="input-helper">Selecione o tipo de animal</span>
+              </div>
+
+              <!-- Campo Idade -->
+              <div class="form-group">
+                <label for="animal-idade" class="form-label">
+                  <i class="fas fa-birthday-cake"></i>
+                  Idade (anos)
+                </label>
+                <input 
+                  type="number" 
+                  id="animal-idade" 
+                  class="form-input" 
+                  placeholder="0"
+                  min="0" 
+                  max="50"
+                  required
+                >
+                <span class="input-helper">Idade em anos completos</span>
+              </div>
+
+              <!-- Campo Dono (COM NOME VISÍVEL) -->
+              <div class="form-group">
+                <label for="animal-dono-id" class="form-label">
+                  <i class="fas fa-user"></i>
+                  Dono Responsável
+                </label>
+                <select id="animal-dono-id" class="form-input" required>
+                  <option value="">Selecione o dono</option>
+                  <!-- Opções serão carregadas dinamicamente -->
+                </select>
+                <span class="input-helper">Selecione o proprietário do animal</span>
+                <!-- Exibição do ID selecionado -->
+                <div class="selected-info" id="dono-selecionado" style="display: none;">
+                  <small><strong>ID do Dono:</strong> <span id="dono-id-mostrado"></span></small>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save"></i>
+                Salvar Animal
+              </button>
+              <button type="button" id="limpar-animal" class="btn btn-secondary">
+                <i class="fas fa-eraser"></i>
+                Limpar
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Tabela de animais com dono_id visível -->
+        <div class="table-container">
+          <div class="table-header">
+            <h3 class="table-title">
+              <i class="fas fa-list"></i>
+              Animais Cadastrados
+            </h3>
+            <div class="table-info">
+              <span class="record-count" id="animais-count">0 registros</span>
+            </div>
+          </div>
+          
+          <div class="table-wrapper">
+            <table id="tabela-animais" class="modern-table">
+              <thead>
+                <tr>
+                  <th><i class="fas fa-hashtag"></i> ID</th>
+                  <th><i class="fas fa-paw"></i> Nome</th>
+                  <th><i class="fas fa-dna"></i> Espécie</th>
+                  <th><i class="fas fa-birthday-cake"></i> Idade</th>
+                  <th><i class="fas fa-user"></i> Dono (Nome)</th>
+                  <th><i class="fas fa-hashtag"></i> Dono ID</th>
+                  <th><i class="fas fa-cogs"></i> Ações</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Linhas inseridas dinamicamente -->
+              </tbody>
+            </table>
+            
+            <div class="empty-state" id="animais-empty" style="display: none;">
+              <i class="fas fa-dog"></i>
+              <p>Nenhum animal cadastrado ainda</p>
+              <span>Comece cadastrando um novo paciente</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SEÇÃO DE VACINAS -->
+      <section id="vacinas" class="tab-section">
+        <div class="section-header">
+          <h2 class="section-title">
+            <i class="fas fa-syringe"></i>
+            Gestão de Vacinas
+          </h2>
+          <p class="section-description">Controle do calendário vacinal dos pacientes</p>
+        </div>
+
+        <!-- Formulário de cadastro/edição de vacinas -->
+        <div class="form-container">
+          <form id="form-vacina" class="modern-form">
+            <input type="hidden" id="vacina-id">
+            
+            <div class="form-grid">
+              <!-- Campo Nome da Vacina -->
+              <div class="form-group">
+                <label for="vacina-nome" class="form-label">
+                  <i class="fas fa-syringe"></i>
+                  Nome da Vacina
+                </label>
+                <input 
+                  type="text" 
+                  id="vacina-nome" 
+                  class="form-input" 
+                  placeholder="Ex: V10, Raiva"
+                  list="vacinas-comuns"
+                  required
+                >
+                <datalist id="vacinas-comuns">
+                  <option value="V10 (Múltipla)">
+                  <option value="Anti-rábica">
+                  <option value="Gripe Canina">
+                  <option value="Leptospirose">
+                  <option value="Giárdia">
+                </datalist>
+                <span class="input-helper">Nome completo da vacina</span>
+              </div>
+
+              <!-- Campo Data de Aplicação -->
+              <div class="form-group">
+                <label for="vacina-data" class="form-label">
+                  <i class="fas fa-calendar"></i>
+                  Data de Aplicação
+                </label>
+                <input 
+                  type="date" 
+                  id="vacina-data" 
+                  class="form-input"
+                  required
+                >
+                <span class="input-helper">Data em que a vacina foi aplicada</span>
+              </div>
+
+              <!-- Campo Animal (COM NOME VISÍVEL) -->
+              <div class="form-group">
+                <label for="vacina-animal-id" class="form-label">
+                  <i class="fas fa-paw"></i>
+                  Animal Paciente
+                </label>
+                <select id="vacina-animal-id" class="form-input" required>
+                  <option value="">Selecione o animal</option>
+                  <!-- Opções carregadas dinamicamente -->
+                </select>
+                <span class="input-helper">Selecione o animal que recebeu a vacina</span>
+                <!-- Exibição do ID selecionado -->
+                <div class="selected-info" id="animal-selecionado" style="display: none;">
+                  <small><strong>ID do Animal:</strong> <span id="animal-id-mostrado"></span></small>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save"></i>
+                Salvar Vacina
+              </button>
+              <button type="button" id="limpar-vacina" class="btn btn-secondary">
+                <i class="fas fa-eraser"></i>
+                Limpar
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Tabela de vacinas com animal_id visível -->
+        <div class="table-container">
+          <div class="table-header">
+            <h3 class="table-title">
+              <i class="fas fa-list"></i>
+              Vacinas Aplicadas
+            </h3>
+            <div class="table-info">
+              <span class="record-count" id="vacinas-count">0 registros</span>
+            </div>
+          </div>
+          
+          <div class="table-wrapper">
+            <table id="tabela-vacinas" class="modern-table">
+              <thead>
+                <tr>
+                  <th><i class="fas fa-hashtag"></i> ID</th>
+                  <th><i class="fas fa-syringe"></i> Vacina</th>
+                  <th><i class="fas fa-calendar"></i> Data</th>
+                  <th><i class="fas fa-paw"></i> Animal (Nome)</th>
+                  <th><i class="fas fa-hashtag"></i> Animal ID</th>
+                  <th><i class="fas fa-cogs"></i> Ações</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Linhas inseridas dinamicamente -->
+              </tbody>
+            </table>
+            
+            <div class="empty-state" id="vacinas-empty" style="display: none;">
+              <i class="fas fa-syringe"></i>
+              <p>Nenhuma vacina aplicada ainda</p>
+              <span>Comece registrando uma nova aplicação</span>
+            </div>
+          </div>
+        </div>
+      </section>
+        
+        <!-- SEÇÃO DE CONSULTAS -->
+        <section id="consultas" class="tab-section">
+          <div class="section-header">
+            <h2 class="section-title">
+              <i class="fas fa-calendar-check"></i>
+              Gestão de Consultas
+            </h2>
+            <p class="section-description">Agendamento e acompanhamento de consultas veterinárias</p>
+          </div>
+
+          <!-- Dashboard de estatísticas -->
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-icon">
+                <i class="fas fa-calendar-alt"></i>
+              </div>
+              <div class="stat-info">
+                <h3 id="stat-total">0</h3>
+                <p>Total de Consultas</p>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon">
+                <i class="fas fa-clock"></i>
+              </div>
+              <div class="stat-info">
+                <h3 id="stat-agendadas">0</h3>
+                <p>Agendadas</p>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon">
+                <i class="fas fa-check-circle"></i>
+              </div>
+              <div class="stat-info">
+                <h3 id="stat-concluidas">0</h3>
+                <p>Concluídas</p>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon">
+                <i class="fas fa-times-circle"></i>
+              </div>
+              <div class="stat-info">
+                <h3 id="stat-canceladas">0</h3>
+                <p>Canceladas</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Formulário de agendamento -->
+          <div class="form-container">
+            <h3 class="form-title">
+              <i class="fas fa-plus-circle"></i>
+              Agendar Nova Consulta
+            </h3>
+            
+            <form id="consulta-form">
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="consulta-dono">
+                    <i class="fas fa-user"></i>
+                    Dono do Pet *
+                  </label>
+                  <select id="consulta-dono" required>
+                    <option value="">Selecione um dono</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="consulta-animal">
+                    <i class="fas fa-paw"></i>
+                    Animal *
+                  </label>
+                  <select id="consulta-animal" required disabled>
+                    <option value="">Selecione um dono primeiro</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="consulta-data-hora">
+                    <i class="fas fa-calendar"></i>
+                    Data e Hora *
+                  </label>
+                  <input type="datetime-local" id="consulta-data-hora" required>
+                </div>
+                <div class="form-group">
+                  <label for="consulta-status">
+                    <i class="fas fa-info-circle"></i>
+                    Status
+                  </label>
+                  <select id="consulta-status">
+                    <option value="AGENDADA">Agendada</option>
+                    <option value="EM_ANDAMENTO">Em Andamento</option>
+                    <option value="CONCLUIDA">Concluída</option>
+                    <option value="CANCELADA">Cancelada</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="consulta-motivo">
+                    <i class="fas fa-stethoscope"></i>
+                    Motivo da Consulta *
+                  </label>
+                  <input type="text" id="consulta-motivo" placeholder="Ex: Check-up anual, vacinação, emergência" required>
+                </div>
+                <div class="form-group">
+                  <label for="consulta-valor">
+                    <i class="fas fa-money-bill-wave"></i>
+                    Valor (R$)
+                  </label>
+                  <input type="number" id="consulta-valor" placeholder="0.00" step="0.01" min="0">
+                </div>
+              </div>
+
+              <div class="form-group full-width">
+                <label for="consulta-observacoes">
+                  <i class="fas fa-notes-medical"></i>
+                  Observações
+                </label>
+                <textarea id="consulta-observacoes" rows="4" placeholder="Observações importantes sobre a consulta..."></textarea>
+              </div>
+
+              <div class="form-actions">
+                <button type="submit" class="btn btn-primary">
+                  <i class="fas fa-save"></i>
+                  Agendar Consulta
+                </button>
+                <button type="button" class="btn btn-secondary" onclick="limparFormularioConsulta()">
+                  <i class="fas fa-eraser"></i>
+                  Limpar
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Tabela de Consultas -->
+          <div class="table-container">
+            <h3 class="table-title">
+              <i class="fas fa-list"></i>
+              Consultas Agendadas
+            </h3>
+            
+            <div class="table-responsive">
+              <table class="data-table" id="consultas-table">
+                <thead>
+                  <tr>
+                    <th>Data/Hora</th>
+                    <th>Dono</th>
+                    <th>Animal</th>
+                    <th>Motivo</th>
+                    <th>Status</th>
+                    <th>Valor</th>
+                    <th>Ações</th>
+                  </tr>
+                </thead>
+                <tbody id="consultas-tbody">
+                  <!-- As consultas serão inseridas aqui via JavaScript -->
+                </tbody>
+              </table>
+              
+              <div id="consultas-empty" class="empty-state" style="display: none;">
+                <div class="empty-icon">
+                  <i class="fas fa-calendar-times"></i>
+                </div>
+                <h4>Nenhuma consulta agendada</h4>
+                <p>Comece agendando uma nova consulta</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+          <!-- SEÇÃO DE BANHO E TOSA -->
+          <section id="banho-tosa" class="tab-section">
+            <div class="section-header">
+              <h2 class="section-title">
+                <i class="fas fa-shower"></i>
+                Gestão de Banho e Tosa
+              </h2>
+              <p class="section-description">Agendamento e acompanhamento de serviços de estética pet</p>
+            </div>
+
+            <!-- Dashboard de estatísticas de serviços -->
+            <div class="stats-grid">
+              <div class="stat-card">
+                <div class="stat-icon">
+                  <i class="fas fa-shower"></i>
+                </div>
+                <div class="stat-info">
+                  <h3 id="servico-stat-total">0</h3>
+                  <p>Total de Serviços</p>
+                </div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-icon">
+                  <i class="fas fa-clock"></i>
+                </div>
+                <div class="stat-info">
+                  <h3 id="servico-stat-agendados">0</h3>
+                  <p>Agendados</p>
+                </div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-icon">
+                  <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="stat-info">
+                  <h3 id="servico-stat-concluidos">0</h3>
+                  <p>Concluídos</p>
+                </div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-icon">
+                  <i class="fas fa-times-circle"></i>
+                </div>
+                <div class="stat-info">
+                  <h3 id="servico-stat-cancelados">0</h3>
+                  <p>Cancelados</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Formulário de agendamento de serviço -->
+            <div class="form-container">
+              <h3 class="form-title">
+                <i class="fas fa-plus-circle"></i>
+                Agendar Novo Serviço
+              </h3>
+              
+              <form id="servico-form">
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="servico-dono">
+                      <i class="fas fa-user"></i>
+                      Dono do Pet *
+                    </label>
+                    <select id="servico-dono" required>
+                      <option value="">Selecione um dono</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="servico-animal">
+                      <i class="fas fa-paw"></i>
+                      Animal *
+                    </label>
+                    <select id="servico-animal" required disabled>
+                      <option value="">Selecione um dono primeiro</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="servico-tipo">
+                      <i class="fas fa-shower"></i>
+                      Tipo de Serviço *
+                    </label>
+                    <select id="servico-tipo" required>
+                      <option value="">Selecione o serviço</option>
+                      <option value="BANHO">🚿 Banho</option>
+                      <option value="TOSA">✂️ Tosa</option>
+                      <option value="BANHO_E_TOSA">🚿✂️ Banho e Tosa</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="servico-data-hora">
+                      <i class="fas fa-calendar"></i>
+                      Data e Hora *
+                    </label>
+                    <input type="datetime-local" id="servico-data-hora" required>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="servico-status">
+                      <i class="fas fa-info-circle"></i>
+                      Status
+                    </label>
+                    <select id="servico-status">
+                      <option value="AGENDADO">Agendado</option>
+                      <option value="EM_ANDAMENTO">Em Andamento</option>
+                      <option value="CONCLUIDO">Concluído</option>
+                      <option value="CANCELADO">Cancelado</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="servico-valor">
+                      <i class="fas fa-money-bill-wave"></i>
+                      Valor (R$)
+                    </label>
+                    <input type="number" id="servico-valor" placeholder="0.00" step="0.01" min="0">
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="servico-duracao">
+                      <i class="fas fa-hourglass-half"></i>
+                      Duração Estimada (minutos)
+                    </label>
+                    <input type="number" id="servico-duracao" placeholder="60" min="15" max="480">
+                  </div>
+                </div>
+
+                <div class="form-group full-width">
+                  <label for="servico-observacoes">
+                    <i class="fas fa-notes-medical"></i>
+                    Observações
+                  </label>
+                  <textarea id="servico-observacoes" rows="4" placeholder="Observações importantes sobre o serviço..."></textarea>
+                </div>
+
+                <div class="form-actions">
+                  <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save"></i>
+                    Agendar Serviço
+                  </button>
+                  <button type="button" class="btn btn-secondary" onclick="limparFormularioServico()">
+                    <i class="fas fa-eraser"></i>
+                    Limpar
+                  </button>
+                </div>
+              </form>
+            </div>
+
+            <!-- Tabela de Serviços -->
+            <div class="table-container">
+              <h3 class="table-title">
+                <i class="fas fa-list"></i>
+                Serviços Agendados
+              </h3>
+              
+              <div class="table-responsive">
+                <table class="data-table" id="servicos-table">
+                  <thead>
+                    <tr>
+                      <th>Data/Hora</th>
+                      <th>Dono</th>
+                      <th>Animal</th>
+                      <th>Serviço</th>
+                      <th>Status</th>
+                      <th>Valor</th>
+                      <th>Duração</th>
+                      <th>Ações</th>
+                    </tr>
+                  </thead>
+                  <tbody id="servicos-tbody">
+                    <!-- Os serviços serão inseridos aqui via JavaScript -->
+                  </tbody>
+                </table>
+                
+                <div id="servicos-empty" class="empty-state" style="display: none;">
+                  <div class="empty-icon">
+                    <i class="fas fa-shower"></i>
+                  </div>
+                  <h4>Nenhum serviço agendado</h4>
+                  <p>Comece agendando um novo serviço de banho e tosa</p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+    </main>
+
+    <!-- Rodapé da aplicação -->
+    <footer class="footer">
+      <div class="footer-content">
+        <p class="footer-text">
+          <i class="fas fa-heart"></i>
+          Sistema de Gestão Veterinária 
+        </p>
+        <div class="footer-badges">
+          <span class="version-badge">v2.0</span>
+          <span class="tech-badge">Guilherme</span>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Modal de confirmação -->
+    <div id="confirmModal" class="modal" style="display: none;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3><i class="fas fa-exclamation-triangle"></i> Confirmar Ação</h3>
+          <button class="modal-close" onclick="closeModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+          <p id="confirmMessage">Tem certeza que deseja continuar?</p>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
+          <button class="btn btn-danger" id="confirmBtn">Confirmar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast de notificações -->
+    <div id="toast" class="toast" style="display: none;">
+      <div class="toast-content">
+        <i class="fas fa-check-circle" id="toastIcon"></i>
+        <span id="toastMessage">Operação realizada com sucesso!</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Script JavaScript principal -->
+  <script src="./app.js"></script>
+</body>
+</html>
